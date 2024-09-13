@@ -1,0 +1,54 @@
+{% extends 'layout/base.html' %}
+{% block title %}Derma Detect | About{% endblock %}
+{% block content %}
+
+<!-- About Section -->
+<section id="about" class="about section">
+ 
+  <div class="container">
+
+    <div class="row gy-4 gx-5">
+
+      <div class="col-lg-6 position-relative align-self-start" data-aos="fade-up" data-aos-delay="200">
+        <img src="{{url_for('static',filename='user-dash-assets/img/about.jpg')}}" class="img-fluid" alt="">
+        <a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" class="glightbox play-btn"></a>
+      </div>
+
+      <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
+        <h3>About Us</h3>
+        <p>
+          Welcome to Derma Detect, your trusted provider in skin cancer detection and dermatological care. Our experienced team uses state-of-the-art technology to offer personalized and compassionate care. 
+          We focus on early detection, accurate diagnoses, and effective treatments, promoting education and prevention to ensure your skin health.
+        </p>
+        <ul>
+          <li>
+            <i class="fa-solid fa-vial-circle-check"></i>
+            <div>
+              <h5>Skin Cancer Screening</h5>
+              <p>Comprehensive screenings to identify suspicious moles and lesions early.</p>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-pump-medical"></i>
+            <div>
+              <h5>Dermoscopy</h5>
+              <p>Detailed examination of the skin using magnification to detect early-stage melanoma and other skin cancers.</p>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-heart-circle-xmark"></i>
+            <div>
+              <h5>Patient Education and Prevention</h5>
+              <p>Educational programs and resources to inform about skin cancer prevention, sun safety, and regular skin checks.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</section><!-- /About Section -->
+
+{% endblock %}

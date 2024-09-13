@@ -1,0 +1,318 @@
+{% extends 'layout/base.html' %}
+{% block title %}Derma Detect | Home{% endblock %}
+{% block content %}
+
+<main class="main">
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero section">
+
+    <img src="{{url_for('static',filename='user-dash-assets/img/hero-bg.jpg')}}" alt="" data-aos="fade-in">
+
+    <div class="container position-relative">
+
+      <div class="welcome position-relative" data-aos="fade-down" data-aos-delay="100">
+        <h2>WELCOME TO DERMA DETECT</h2>
+      </div><!-- End Welcome -->
+
+      <div class="content row gy-4">
+        <div class="col-lg-4 d-flex align-items-stretch">
+          <div class="why-box" data-aos="zoom-out" data-aos-delay="200">
+            <h3>Why Choose Derma Detect?</h3>
+            <p>
+              It is a regulated medical service that takes control over your skin health to a new level. It expands your
+              ability to self-examine your skin and elevates your knowledge when to act, how and why. It is designed to
+              provide accurate and timely skin cancer detection,
+              along with the most reliable personalised skin health advice and health path recommendation.
+            </p>
+            <div class="text-center">
+              <a href="/check-up" class="more-btn"><span>Check Up</span> <i class="bi bi-chevron-right"></i></a>
+            </div>
+          </div>
+        </div><!-- End Why Box -->
+
+        <div class="col-lg-8 d-flex align-items-stretch">
+          <div class="d-flex flex-column justify-content-center">
+            <div class="row gy-4">
+
+              <div class="col-xl-4 d-flex align-items-stretch">
+                <div class="icon-box" data-aos="zoom-out" data-aos-delay="300">
+                  <i class="bi bi-clipboard-data"></i>
+                  <h4>How much does Derma Detect cost?</h4>
+                  <p>It is a free empowered by a highly accurate AI algorithm and is supported by an advanced quality
+                    system involving the best dermatologists worldwide,
+                    which has only one goal: making sure you visit the right doctor at the first sign of risk for skin
+                    cancer. </p>
+                </div>
+              </div><!-- End Icon Box -->
+
+              <div class="col-xl-4 d-flex align-items-stretch">
+                <div class="icon-box" data-aos="zoom-out" data-aos-delay="400">
+                  <i class="bi bi-gem"></i>
+                  <h4>Can Derma Detect help me detect skin cancer?</h4>
+                  <p>With the Derma Detect, you can immediately detect signs of the most common types of skin cancer,
+                    but it is not a diagnosis. Early detection is critical in skin cancer
+                    treatment and is one of the greatest challenges of modern dermatology, posing significant risk to
+                    your health and life. </p>
+                </div>
+              </div><!-- End Icon Box -->
+
+              <div class="col-xl-4 d-flex align-items-stretch">
+                <div class="icon-box" data-aos="zoom-out" data-aos-delay="500">
+                  <i class="bi bi-inboxes"></i>
+                  <h4>What are the symptoms of skin cancer?</h4>
+                  <p>Most cancers have some pretty obvious signs, including lumps and bumps, tenderness, pain or
+                    sickness. But when it comes to skin cancer symptoms, they aren’t always as plain to see. Skin cancer
+                    is slow-growing and often free of glaring warning signs. This can make early detection tricky.</p>
+                </div>
+              </div><!-- End Icon Box -->
+
+            </div>
+          </div>
+        </div>
+      </div><!-- End  Content-->
+
+    </div>
+
+  </section><!-- /Hero Section -->
+
+
+  <!-- Doctors Section -->
+  <section id="doctors" class="doctors section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Doctors</h2>
+      <p>Derma Detect, founded by top dermatologists and mathematicians, collaborates with global experts in dermatology
+        and skin health.</p>
+    </div>
+    <!-- End Section Title -->
+
+    <div class="container">
+
+      <div class="row gy-4">
+
+        <!-- Loop through all doctors passed from Flask -->
+        {% for doctor in doctors %}
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+          <div class="team-member d-flex align-items-start">
+            <div class="pic">
+              {% if doctor.user.profile_image %}
+              <img src="{{ url_for('static', filename='uploads/user_profile/' ~ doctor.user.profile_image) }}"
+                height="100px" width="100px" alt="Profile Image" class="profile-img rounded-circle">
+              {% else %}
+              <img src="{{ url_for('static', filename='default_profile_image.png') }}" height="40px" width="40px"
+                alt="Default Profile Image" class="profile-img rounded-circle">
+              {% endif %}
+            </div>
+            <div class="member-info">
+              <h4>{{ doctor.name }}</h4>
+              <span>{{ doctor.specialization }}</span>
+              <span>{{ doctor.qualification }}</span>
+            </div>
+          </div>
+        </div>
+        <!-- End Team Member -->
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+
+  </section>
+  <!-- /Doctors Section -->
+
+  <!-- Faq Section -->
+  <section id="faq" class="faq section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Frequently Asked Questions</h2>
+      <p>Derma Detect is a regulated medical service that takes control over your skin health to a new level.</p>
+    </div><!-- End Section Title -->
+
+    <div class="container">
+
+      <div class="row justify-content-center">
+
+        <div class="col-lg-10" data-aos="fade-up" data-aos-delay="100">
+
+          <div class="faq-container">
+
+            <div class="faq-item faq-active">
+              <h3>What are the main types of skin cancer?</h3>
+              <div class="faq-content">
+                <p>The main types of skin cancer are basal cell carcinoma (BCC), squamous cell carcinoma (SCC), and
+                  melanoma. BCC and SCC are more common and less aggressive, while melanoma is rarer but more dangerous
+                  because it can spread to other parts of the body.</p>
+              </div>
+              <i class="faq-toggle bi bi-chevron-right"></i>
+            </div><!-- End Faq item-->
+
+            <div class="faq-item">
+              <h3>What are the risk factors for skin cancer?</h3>
+              <div class="faq-content">
+                <p>Risk factors for skin cancer include excessive sun exposure, a history of sunburns, fair skin, a
+                  family history of skin cancer, a large number of moles, and using tanning beds. People with weakened
+                  immune systems are also at higher risk.</p>
+              </div>
+              <i class="faq-toggle bi bi-chevron-right"></i>
+            </div><!-- End Faq item-->
+
+            <div class="faq-item">
+              <h3>How can I tell if a mole or spot on my skin is cancerous?</h3>
+              <div class="faq-content">
+                <p>Check moles and spots using the ABCDE rule: Asymmetry, Border irregularity, Color variation, Diameter
+                  larger than 6mm, and Evolving changes in the mole. Any changes or new symptoms like itching or
+                  bleeding should be examined by a dermatologist.</p>
+              </div>
+              <i class="faq-toggle bi bi-chevron-right"></i>
+            </div><!-- End Faq item-->
+
+            <div class="faq-item">
+              <h3>How is skin cancer diagnosed?</h3>
+              <div class="faq-content">
+                <p>Skin cancer is diagnosed by a dermatologist who examines the skin. If a suspicious spot is found, a
+                  biopsy is performed, where a small sample of skin is taken and analyzed in a lab to check for cancer
+                  cells.</p>
+              </div>
+              <i class="faq-toggle bi bi-chevron-right"></i>
+            </div><!-- End Faq item-->
+
+            <div class="faq-item">
+              <h3>What are the chances of surviving skin cancer?</h3>
+              <div class="faq-content">
+                <p>The survival rate for skin cancer varies by type and stage. Early-detected basal cell and squamous
+                  cell carcinomas have high
+                  cure rates. Melanoma survival rates depend on early detection and prompt treatment, emphasizing the
+                  importance of regular skin checks.</p>
+              </div>
+              <i class="faq-toggle bi bi-chevron-right"></i>
+            </div><!-- End Faq item-->
+
+            <div class="faq-item">
+              <h3>How often should I have my skin checked by a dermatologist?</h3>
+              <div class="faq-content">
+                <p>It’s recommended to have a full-body skin exam by a dermatologist annually, or more often if you have
+                  a higher risk of skin cancer.
+                  Regular self-exams are also important to monitor any changes in your skin.</p>
+              </div>
+              <i class="faq-toggle bi bi-chevron-right"></i>
+            </div><!-- End Faq item-->
+
+          </div>
+
+        </div><!-- End Faq Column-->
+
+      </div>
+
+    </div>
+
+  </section><!-- /Faq Section -->
+
+
+  <!-- Gallery Section -->
+  <section id="gallery" class="gallery section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Gallery</h2>
+      <p>Explore our Skin Disease Gallery—your visual guide to understanding common skin conditions. </p>
+    </div><!-- End Section Title -->
+
+    <div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
+
+      <div class="row g-0">
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-1.jpg')}}" class="glightbox"
+              data-gallery="images-gallery">
+              <img src="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-1.jpg')}}" alt=""
+                class="img-fluid">
+            </a>
+          </div>
+        </div><!-- End Gallery Item -->
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-2.jpg')}}" class="glightbox"
+              data-gallery="images-gallery">
+              <img src="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-2.jpg')}}" alt=""
+                class="img-fluid">
+            </a>
+          </div>
+        </div><!-- End Gallery Item -->
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-3.jpg')}}" class="glightbox"
+              data-gallery="images-gallery">
+              <img src="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-3.jpg')}}" alt=""
+                class="img-fluid">
+            </a>
+          </div>
+        </div><!-- End Gallery Item -->
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-4.jpg')}}" class="glightbox"
+              data-gallery="images-gallery">
+              <img src="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-4.jpg')}}" alt=""
+                class="img-fluid">
+            </a>
+          </div>
+        </div><!-- End Gallery Item -->
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-5.jpg')}}" class="glightbox"
+              data-gallery="images-gallery">
+              <img src="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-5.jpg')}}" alt=""
+                class="img-fluid">
+            </a>
+          </div>
+        </div><!-- End Gallery Item -->
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-6.jpg')}}" class="glightbox"
+              data-gallery="images-gallery">
+              <img src="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-6.jpg')}}" alt=""
+                class="img-fluid">
+            </a>
+          </div>
+        </div><!-- End Gallery Item -->
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-7.jpg')}}" class="glightbox"
+              data-gallery="images-gallery">
+              <img src="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-7.jpg')}}" alt=""
+                class="img-fluid">
+            </a>
+          </div>
+        </div><!-- End Gallery Item -->
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-8.jpg')}}" class="glightbox"
+              data-gallery="images-gallery">
+              <img src="{{url_for('static',filename='user-dash-assets/img/gallery/gallery-8.jpg')}}" alt=""
+                class="img-fluid">
+            </a>
+          </div>
+        </div><!-- End Gallery Item -->
+
+      </div>
+
+    </div>
+
+  </section><!-- /Gallery Section -->
+
+
+
+</main>
+
+{% endblock %}

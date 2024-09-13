@@ -1,0 +1,413 @@
+{% extends 'admin/layout/base.html' %}
+{% block title %}Derma Detect | Doctor Details{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row row-cols-xxl-5 row-cols-lg-3 row-cols-md-2 row-cols-1">
+            <div class="col">
+                <div class="card border-bottom border-3 card-animate border-secondary">
+                    <div class="card-body">
+                        <span class="badge bg-success-subtle text-success float-end"><i
+                                class="ph-trend-up align-middle me-1"></i> 0%</span>
+                        <h4 class="mb-4"><span class="counter-value" data-target="{{ total_doctors }}">{{ total_doctors
+                                }}</span></h4>
+                        <p class="text-muted fw-medium text-uppercase mb-0">Total Doctors</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-bottom border-3 card-animate border-primary">
+                    <div class="card-body">
+                        <span class="badge bg-success-subtle text-success float-end"><i
+                                class="ph-trend-up align-middle me-1"></i> 0%</span>
+                        <h4 class="mb-4"><span class="counter-value" data-target="{{ total_active_doctors }}">{{
+                                total_active_doctors }}</span></h4>
+                        <p class="text-muted fw-medium text-uppercase mb-0">Active Doctors</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-bottom border-3 card-animate border-warning">
+                    <div class="card-body">
+                        <span class="badge bg-success-subtle text-success float-end"><i
+                                class="ph-trend-up align-middle me-1"></i> 0%</span>
+                        <h4 class="mb-4"><span class="counter-value" data-target="{{ total_inactive_doctors }}">{{
+                                total_inactive_doctors }}</span></h4>
+                        <p class="text-muted fw-medium text-uppercase mb-0">Inactive Doctors</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-bottom border-3 card-animate border-success">
+                    <div class="card-body">
+                        <span class="badge bg-success-subtle text-success float-end"><i
+                                class="ph-trend-up align-middle me-1"></i> 0%</span>
+                        <h4 class="mb-4"><span class="counter-value" data-target="{{ total_appointments }}">{{
+                                total_appointments }}</span></h4>
+                        <p class="text-muted fw-medium text-uppercase mb-0">Appointments</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-bottom border-3 card-animate border-secondary">
+                    <div class="card-body">
+                        <span class="badge bg-success-subtle text-primary float-end"><i
+                                class="ph-arrow-up align-middle me-1"></i> 0%</span>
+                        <h4 class="mb-4"><span class="counter-value" data-target="{{ total_contacts }}">{{
+                                total_contacts }}</span></h4>
+                        <p class="text-muted fw-medium text-uppercase mb-0">Total Contacts</p>
+                    </div>
+                </div>
+            </div>
+        </div><!---end row-->
+
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card" id="doctorList">
+                    <div class="card-header">
+                        <div class="row align-items-center gy-3">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="contact-details-header">
+                                        <h5>Working Doctors</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-3">
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    <a href="{{ url_for('admin.add-date') }}" class="btn btn-primary add-btn ms-auto">
+                                        <i class="bi bi-plus-circle align-baseline me-1"></i> Add Dates
+                                    </a>
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-2 col-md-3">
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    <a href="{{ url_for('admin.add-slot') }}" class="btn btn-primary add-btn ms-auto">
+                                        <i class="bi bi-plus-circle align-baseline me-1"></i> Add Slots
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-3">
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    <a href="{{ url_for('admin.add-doctor') }}" class="btn btn-primary add-btn ms-auto">
+                                        <i class="bi bi-plus-circle align-baseline me-1"></i> Add Doctor
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-centered align-middle table-nowrap mb-0">
+                                <thead class="text-muted table-light position-sticky top-0">
+                                    <tr class="text-center">
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Profile</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Phone</th>
+                                        <th scope="col">Role</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Specialization</th>
+                                        <th scope="col">Qualification</th>
+                                        <th scope="col">Address</th>
+                                        <th scope="col">Schedule</th>
+                                        <!-- <th scope="col">Actions</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody class="list form-check-all text-center">
+                                    {% for doctor in doctors %}
+                                    <tr>
+                                        <td>{{ doctor.id }}</td>
+                                        <td>
+                                            {% if doctor.user.profile_image %}
+                                            <img src="{{ url_for('static', filename='uploads/user_profile/' ~ doctor.user.profile_image) }}"
+                                                height="40px" width="40px" alt="Profile Image"
+                                                class="profile-img rounded-circle">
+                                            {% else %}
+                                            <img src="{{ url_for('static', filename='default_profile_image.png') }}"
+                                                height="40px" width="40px" alt="Default Profile Image"
+                                                class="profile-img rounded-circle">
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ doctor.name if doctor.name else 'N/A' }}</td>
+                                        <td>{{ doctor.email if doctor.email else 'N/A' }}</td>
+                                        <td>{{ doctor.phone if doctor.phone else 'N/A' }}</td>
+                                        <td>
+                                            <span class="badge bg-success">
+                                                {{ doctor.user.role.value }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="badge {{ 'bg-success' if doctor.user.status.value == 1 else 'bg-danger' }}">
+                                                {% if doctor.user.status.value == 1 %}
+                                                Active
+                                                {% else %}
+                                                Inactive
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td>{{ doctor.specialization if doctor.specialization else 'N/A' }}</td>
+                                        <td>{{ doctor.qualification if doctor.qualification else 'N/A' }}</td>
+                                        <td>{{ doctor.address if doctor.address else 'N/A' }}</td>
+
+                                        <td>
+                                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#scheduleModal-{{ doctor.id }}">
+                                                View Schedule
+                                            </button>
+                                        </td>
+
+                                        <!-- <td>
+                                            <a href="#" class="btn btn-warning btn-sm">
+                                                <i class="ph-pencil"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-info btn-sm">
+                                                <i class="ph-eye"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#deleteRecordModal" data-doctor-id="{{ doctor.id }}">
+                                                <i class="ph-trash"></i>
+                                            </button>
+                                        </td> -->
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+        </div>
+        <!-- end row -->
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card" id="doctorList">
+                    <div class="card-header">
+                        <div class="row align-items-center gy-3">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="contact-details-header">
+                                    <h6>Doctors Registered with Incomplete Profiles.</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
+                                <thead class="text-muted table-light">
+                                    <tr class="text-center">
+                                        <th scope="col">User ID</th>
+                                        <th scope="col">Profile</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Phone</th>
+                                        <th scope="col">Role</th>
+                                        <th scope="col">Status</th>
+                                        <!-- <th scope="col">Action</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody class="list form-check-all text-center">
+                                    {% for user in incomplete_doctors %}
+                                    <tr>
+                                        <td>{{ user.id }}</td>
+                                        <td>
+                                            <img src="{{ url_for('static', filename='uploads/user_profile/' ~ user.profile_image) }}"
+                                                height="40px" width="40px" alt="Profile Image"
+                                                class="profile-img rounded-circle">
+                                        </td>
+                                        <td>{{ user.name }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.phone }}</td>
+                                        <td>
+                                            <span class="badge bg-success">
+                                                {{ user.role.value }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('admin.toggle_status_doctors', user_id=user.id) }}" class="badge {{ 'bg-success' if user.status.value == 1 else 'bg-danger' }}">
+                                                {% if user.status.value == 1 %}
+                                                Active
+                                                {% else %}
+                                                Inactive
+                                                {% endif %}
+                                            </a>
+                                        </td>
+                                        <!-- <td>
+                                            <a href="#" class="btn btn-warning btn-sm">
+                                                <i class="ph-pencil"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#viewUserModal">
+                                                <i class="ph-eye"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#deleteRecordModal">
+                                                <i class="ph-trash"></i>
+                                            </button>
+                                        </td> -->
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="noresult" style="display: none">
+                                <div class="text-center py-4">
+                                    <i class="ph-magnifying-glass fs-1 text-primary"></i>
+                                    <h5 class="mt-2">Sorry! No Result Found</h5>
+                                    <p class="text-muted mb-0">We've searched all Users, We did not find any User for
+                                        you search.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+        </div>
+        <!-- end row -->
+        
+    </div>
+    <!-- container-fluid -->
+</div>
+<!-- End Page-content -->
+
+{% for doctor in doctors %}
+<div class="modal fade" id="scheduleModal-{{ doctor.id }}" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="scheduleModalLabel">Schedule for {{ doctor.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Slots</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set schedules_by_date = {} %}
+                            {% for schedule in schedules if schedule.doctor_id == doctor.id %}
+                            {% set date_str = schedule.date.date.strftime('%Y-%m-%d') %}
+                            {% if date_str not in schedules_by_date %}
+                            {% set _ = schedules_by_date.update({date_str: []}) %}
+                            {% endif %}
+                            {% set _ = schedules_by_date[date_str].append({'slot': schedule.time_slot, 'status': schedule.status, 'appointment_id': schedule.appointments[0].id if schedule.appointments else ''}) %}
+                            {% endfor %}
+
+                            {% for date, slot_details in schedules_by_date.items() %}
+                            <tr>
+                                <td rowspan="{{ slot_details|length }}">{{ date }}</td>
+                                <td>{{ slot_details[0]['slot'] }}</td>
+                                <td>
+                                    <span class="badge {{ 'bg-success' if slot_details[0]['status'] == 1 else 'bg-danger' }}" 
+                                          data-bs-toggle="modal" 
+                                          data-bs-target="#appointmentDetailsModal" 
+                                          data-appointment-id="{{ slot_details[0]['appointment_id'] }}"
+                                          data-status="{{ 'booked' if slot_details[0]['status'] == 0 else 'open' }}">
+                                        {{ 'Open' if slot_details[0]['status'] == 1 else 'Booked' }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% for slot_detail in slot_details[1:] %}
+                            <tr>
+                                <td>{{ slot_detail['slot'] }}</td>
+                                <td>
+                                    <span class="badge {{ 'bg-success' if slot_detail['status'] == 1 else 'bg-danger' }}" 
+                                          data-bs-toggle="modal" 
+                                          data-bs-target="#appointmentDetailsModal" 
+                                          data-appointment-id="{{ slot_detail['appointment_id'] }}"
+                                          data-status="{{ 'booked' if slot_detail['status'] == 0 else 'open' }}">
+                                        {{ 'Open' if slot_detail['status'] == 1 else 'Booked' }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Appointment Details Modal -->
+<div class="modal fade" id="appointmentDetailsModal" tabindex="-1" aria-labelledby="appointmentDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="appointmentDetailsModalLabel">Appointment Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="appointmentContent">
+                    <!-- Appointment details will be populated here via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const appointmentDetailsModal = document.getElementById('appointmentDetailsModal');
+        appointmentDetailsModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const appointmentId = button.getAttribute('data-appointment-id');
+            const status = button.getAttribute('data-status');
+
+            const modalTitle = document.getElementById('appointmentDetailsModalLabel');
+            const modalContent = document.getElementById('appointmentContent');
+
+            if (status === 'booked' && appointmentId) {
+                fetch(`/appointment-details/${appointmentId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        modalTitle.textContent = "Appointment Details";
+                        modalContent.innerHTML = `
+                            <p><strong>Appointment Id:</strong> ${data.id}</p>
+                            <p><strong>Petient(User Id):</strong> ${data.user_id}</p>
+                            <p><strong>Name:</strong> ${data.name}</p>
+                            <p><strong>Email:</strong> ${data.email}</p>
+                            <p><strong>Phone:</strong> ${data.phone}</p>
+                            <p><strong>Age:</strong> ${data.age}</p>
+                            <p><strong>Gender:</strong> ${data.gender}</p>
+                            <p><strong>Address:</strong> ${data.address}</p>
+                            <p><strong>Specialization:</strong> ${data.specialization}</p>
+                            <p><strong>Message:</strong> ${data.message}</p>
+                        `;
+                    });
+            } else {
+                modalTitle.textContent = "Slot Status";
+                modalContent.innerHTML = "<p>This slot is not booked.</p>";
+            }
+        });
+    });
+</script>
+
+
+
+{% endblock %}

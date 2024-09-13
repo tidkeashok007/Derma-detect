@@ -1,0 +1,188 @@
+{% extends 'admin/layout/base.html' %}
+{% block title %}Derma Detect | Contact Details{% endblock %}
+{% block content %}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card" id="orderList">
+                    <div class="card-header">
+                        <div class="row align-items-center gy-3">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="search-box">
+                                    <input type="text" class="form-control search"
+                                        placeholder="Search for contact ID, Name, Email, Phone...">
+                                    <i class="ri-search-line search-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-md-auto ms-md-auto">
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-centered align-middle table-nowrap mb-0">
+                                <thead class="text-muted table-light">
+                                    <tr class="text-center">
+                                        <th scope="col">ID</th>
+                                        <th scope="col">User ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Phone</th>
+                                        <th scope="col">Subject</th>
+                                        <th scope="col">Message</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list form-check-all">
+                                    {% for contact in contacts %}
+                                    <tr class="text-center">
+                                        <td class="id">{{ contact.id }}</td>
+                                        <td class="user_id">{{ contact.user_id }}</td>
+                                        <td class="name">{{ contact.name }}</td>
+                                        <td class="email">{{ contact.email }}</td>
+                                        <td class="phone">{{ contact.phone }}</td>
+                                        <td class="subject">{{ contact.subject }}</td>
+                                        <td class="message">{{ contact.message }}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#viewContactModal" data-user-id="{{ contact.id }}"
+                                                data-user-user_id="{{ contact.user_id }}"
+                                                data-user-name="{{ contact.name }}"
+                                                data-user-email="{{ contact.email }}"
+                                                data-user-phone="{{ contact.phone }}"
+                                                data-user-subject="{{ contact.subject }}"
+                                                data-user-message="{{ contact.message }}">
+                                                <i class="ph-eye"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#deleteRecordModal" data-contact-id="{{ contact.id }}">
+                                                <i class="ph-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody><!-- end tbody -->
+                            </table><!-- end table -->
+                            <div class="noresult" style="display: none">
+                                <div class="text-center py-4">
+                                    <i class="ph-magnifying-glass fs-1 text-primary"></i>
+                                    <h5 class="mt-2">Sorry! No Result Found</h5>
+                                    <p class="text-muted mb-0">We've searched all contacts, We did
+                                        not find any contacts for you search.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- container-fluid -->
+</div>
+<!-- End Page-content -->
+
+<!-- deleteRecordModal -->
+<div id="deleteRecordModal" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-md-5">
+                <div class="text-center">
+                    <div class="text-danger">
+                        <i class="bi bi-trash display-4"></i>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="mb-2">Are you sure?</h3>
+                        <p class="text-muted fs-lg mx-3 mb-0">Are you sure you want to remove this record?</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                    <button type="button" class="btn w-sm btn-light btn-hover" data-bs-dismiss="modal">Close</button>
+                    <form method="POST" action="#">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" id="doctor_id" name="doctor_id" value="">
+                        <button type="submit" class="btn w-sm btn-danger btn-hover">Yes, Delete It!</button>
+                    </form>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /deleteRecordModal -->
+
+
+<!-- View User Modal -->
+<div class="modal fade zoomIn" id="viewContactModal" tabindex="-1" aria-labelledby="viewContactModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light p-3 text-center">
+                <h5 class="modal-title w-100" id="viewContactModalLabel">User Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="row justify-content-center">
+                    <div class="col-md-10">
+                        <p><strong>ID:</strong> <span id="viewContactId"></span></p>
+                        <p><strong>User ID:</strong> <span id="viewContactUserId"></span></p>
+                        <p><strong>Name:</strong> <span id="viewContactName"></span></p>
+                        <p><strong>Email:</strong> <span id="viewContactEmail"></span></p>
+                        <p><strong>Phone:</strong> <span id="viewContactPhone"></span></p>
+                        <p><strong>Subject:</strong> <span id="viewContactSubject"></span></p>
+                        <p><strong>Message:</strong> <span id="viewContactMessage"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Place this script at the end of your main template file or in a separate JS file -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var viewContactModal = document.getElementById('viewContactModal');
+
+        viewContactModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var userId = button.getAttribute('data-user-id');
+            var user_Id = button.getAttribute('data-user-user_id');
+            var userName = button.getAttribute('data-user-name');
+            var userEmail = button.getAttribute('data-user-email');
+            var userPhone = button.getAttribute('data-user-phone');
+            var userSubject = button.getAttribute('data-user-subject');
+            var userMessage = button.getAttribute('data-user-message');
+
+            var modalBody = viewContactModal.querySelector('.modal-body');
+            modalBody.querySelector('#viewContactId').textContent = userId;
+            modalBody.querySelector('#viewContactUserId').textContent = user_Id;
+            modalBody.querySelector('#viewContactName').textContent = userName;
+            modalBody.querySelector('#viewContactEmail').textContent = userEmail;
+            modalBody.querySelector('#viewContactPhone').textContent = userPhone;
+            modalBody.querySelector('#viewContactSubject').textContent = userSubject;
+            modalBody.querySelector('#viewContactMessage').textContent = userMessage;
+        });
+    });
+</script>
+
+<script>
+    const deleteModal = document.getElementById('deleteRecordModal');
+    deleteModal.addEventListener('show.bs.modal', (event) => {
+        const button = event.relatedTarget;
+        const contactId = button.getAttribute('data-contact-id');
+        const form = deleteModal.querySelector('form');
+        form.action = `/delete-contact/${contactId}`;
+    });
+</script>
+
+{% endblock %}

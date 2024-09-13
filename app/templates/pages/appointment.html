@@ -1,0 +1,236 @@
+{% extends 'layout/base.html' %}
+{% block title %}Derma Detect | Appointment{% endblock %}
+{% block content %}
+<section id="appointment" class="appointment section">
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Appointment</h2>
+    <p>Protect Your Skin, Detect Early: Book Your Skin Cancer Screening Today!</p>
+  </div>
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <form action="{{ url_for('appointment.appointment') }}" method="POST" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      <div class="row">
+        <div class="col-md-4 form-group">
+          {{ form.name.label(class="form-label") }}
+          {{ form.name(class="form-control", placeholder="Your Name") }}
+        </div>
+        <div class="col-md-4 form-group mt-3 mt-md-0">
+          {{ form.email.label(class="form-label") }}
+          {{ form.email(class="form-control", placeholder="Your Email") }}
+        </div>
+        <div class="col-md-4 form-group mt-3 mt-md-0">
+          {{ form.phone.label(class="form-label") }}
+          {{ form.phone(class="form-control", placeholder="Your Phone") }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 form-group mt-3">
+          {{ form.age.label(class="form-label") }}
+          {{ form.age(class="form-control", placeholder="Your Age") }}
+        </div>
+        <div class="col-md-4 form-group mt-3">
+          {{ form.gender.label(class="form-label") }}
+          {{ form.gender(class="form-control") }}
+        </div>
+        <div class="col-md-4 form-group mt-3">
+          {{ form.address.label(class="form-label") }}
+          {{ form.address(class="form-control", placeholder="Your Address") }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 form-group mt-3">
+          {{ form.specialization.label(class="form-label") }}
+          <select name="specialization" class="form-control" id="specialization_select">
+            {% for value, label in form.specialization.choices %}
+            <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4 form-group mt-3">
+          {{ form.doctor.label(class="form-label") }}
+          <select name="doctor" class="form-control" id="doctor_select">
+            {% for value, label in form.doctor.choices %}
+            <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4 form-group mt-3">
+          {{ form.date.label(class="form-label") }}
+          <select name="date" class="form-control" id="datepicker">
+            {% for value, label in form.date.choices %}
+            <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 form-group mt-3">
+          {{ form.time_slot.label(class="form-label") }}
+          <select name="time_slot" id="time_slot" class="form-control">
+            <option value="">Select a doctor first</option>
+          </select>
+        </div>
+        <div class="col-md-4 form-group mt-3">
+          {{ form.file.label(class="form-label") }}
+          {{ form.file(class="form-control") }}
+        </div>
+        <div class="col-md-4 form-group mt-3">
+          {{ form.message.label(class="form-label") }}
+          {{ form.message(class="form-control") }}
+        </div>
+        <div class="text-center mt-3">
+          {{ form.submit(class="btn btn-primary") }}
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#specialization_select').change(function () {
+      var specialization = $(this).val();
+      var doctorSelect = $('#doctor_select');
+
+      if (specialization) {
+        $.ajax({
+          url: '/get_doctors/' + specialization,
+          method: 'GET',
+          success: function (data) {
+            doctorSelect.empty(); // Clear existing options
+            doctorSelect.append('<option value="">Select a doctor</option>');
+
+            if (data.length) {
+              $.each(data, function (index, doctor) {
+                doctorSelect.append('<option value="' + doctor.id + '">' + doctor.name + '</option>');
+              });
+            } else {
+              doctorSelect.append('<option value="">No doctors available</option>');
+            }
+          },
+          error: function () {
+            doctorSelect.empty();
+            doctorSelect.append('<option value="">Failed to load doctors</option>');
+          }
+        });
+      } else {
+        doctorSelect.empty();
+        doctorSelect.append('<option value="">Select a specialization first</option>');
+      }
+    });
+
+    $('#doctor_select').change(function () {
+      var doctorId = $(this).val();
+      var dateSelect = $('#datepicker');
+
+      if (doctorId) {
+        $.ajax({
+          url: '/get_dates/' + doctorId,
+          method: 'GET',
+          success: function (data) {
+            dateSelect.empty(); // Clear existing options
+            dateSelect.append('<option value="">Select a date</option>');
+
+            if (data.length) {
+              $.each(data, function (index, date) {
+                dateSelect.append('<option value="' + date.id + '">' + date.date + '</option>');
+              });
+            } else {
+              dateSelect.append('<option value="">No dates available</option>');
+            }
+          },
+          error: function () {
+            dateSelect.empty();
+            dateSelect.append('<option value="">Failed to load dates</option>');
+          }
+        });
+      } else {
+        dateSelect.empty();
+        dateSelect.append('<option value="">Select a doctor first</option>');
+      }
+    });
+
+    $('#datepicker').change(function () {
+      var dateId = $(this).val();
+      var timeSlotSelect = $('#time_slot');
+
+      if (dateId) {
+        $.ajax({
+          url: '/get_time_slots/' + dateId,
+          method: 'GET',
+          success: function (data) {
+            timeSlotSelect.empty(); // Clear existing options
+            timeSlotSelect.append('<option value="">Select a time slot</option>');
+
+            if (data.length) {
+              $.each(data, function (index, slot) {
+                timeSlotSelect.append('<option value="' + slot.id + '">' + slot.time_slot + '</option>');
+              });
+            } else {
+              timeSlotSelect.append('<option value="">No time slots available Select anathor date.</option>');
+            }
+          },
+          error: function () {
+            timeSlotSelect.empty();
+            timeSlotSelect.append('<option value="">Failed to load time slots</option>');
+          }
+        });
+      } else {
+        timeSlotSelect.empty();
+        timeSlotSelect.append('<option value="">Select a date first</option>');
+      }
+    });
+  });
+</script>
+<!-- Section to display user's appointments -->
+<section id="user-appointments" class="user-appointments section">
+  <div class="container" style="position: relative; overflow: hidden;">
+    <h3>Your Appointments</h3>
+    <table class="table table-bordered">
+      <thead>
+          <tr>
+              <th>Appointment</th>
+              <th>Specialization</th>
+              <th>Doctor</th>
+              <th>Date</th>
+              <th>Time Slot</th>
+              <th>Status</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% if user_appointments %}
+              {% for appointment in user_appointments %}
+                  {% if appointment.user_id == current_user.id %}
+                      <tr>
+                          <!-- Display the appointment number -->
+                          <td>{{ loop.index }}{% if loop.index == 1 %}st{% elif loop.index == 2 %}nd{% elif loop.index == 3 %}rd{% else %}th{% endif %} Appointment</td>
+                          <td>{{ appointment.specialization }}</td>
+                          <td>{{ appointment.doctor.name }}</td>
+                          <td>{{ appointment.date.date.strftime('%Y-%m-%d') }}</td>
+                          <td>{{ appointment.time_slot.time_slot }}</td>
+                          <td>
+                              <span class="badge {{ 'bg-success' if appointment.time_slot.status == 0 else 'bg-danger' }}">
+                                  {{ 'Confirmed' if appointment.time_slot.status == 0 else 'Pending' }}
+                              </span>
+                          </td>
+                      </tr>
+                  {% endif %}
+              {% endfor %}
+          {% else %}
+              <tr>
+                  <td colspan="6">No appointments found.</td>
+              </tr>
+          {% endif %}
+      </tbody>
+  </table>
+  
+    
+    <!-- Help Note -->
+    <div class="help-note">
+      <small>Note: If you need any help, please call us at <a href="tel: +91 9876543210">+91 9876543210</a> or email <a href="mailto:dermadetect@gmail.com">dermadetect@gmail.com</a>.</small>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

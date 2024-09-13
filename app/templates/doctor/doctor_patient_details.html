@@ -1,0 +1,81 @@
+{% extends 'doctor/layout/base.html' %}
+{% block title %}Derma Detect | Appointment Details{% endblock %}
+{% block content %}
+<div class="page-content">
+     <div class="container-fluid">
+          <div class="row">
+               <div class="col-lg-12">
+                    <div class="card" id="orderList">
+                         <div class="card-header">
+                              <div class="row align-items-center gy-3">
+                                   <div class="col-lg-6 col-md-6">
+                                        <form method="GET" action="{{ url_for('doctor.patient-details') }}"
+                                             class="search-box">
+                                             <input type="text" class="form-control search" id="searchBox" name="query"
+                                                  placeholder="Search for User ID, Name, Email, Phone or something..."
+                                                  value="{{ request.args.get('query', '') }}">
+                                             <i class="ri-search-line search-icon"></i>
+                                        </form>
+                                   </div>
+                                   <div class="col-md-auto ms-md-auto">
+                                        <div class="d-flex flex-wrap align-items-center gap-2">
+                                             <a href="{{ url_for('doctor.add-case-reports') }}"
+                                                  class="btn btn-primary add-btn ms-auto">
+                                                  <i class="bi bi-plus-circle align-baseline me-1"></i>Add
+                                                  Case Reports
+                                             </a>
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
+                         <div class="card-body">
+                              <div class="table-responsive">
+                                   <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
+                                        <thead class="text-muted table-light">
+                                             <tr class="text-center">
+                                                  <th scope="col">Patient ID</th>
+                                                  <th scope="col">Patient Name</th>
+                                                  <th scope="col">Email</th>
+                                                  <th scope="col">Phone</th>
+                                                  <th scope="col">Action</th>
+                                             </tr>
+                                        </thead>
+                                        <tbody class="list form-check-all text-center">
+                                             {% for user in users %}
+                                             <tr>
+                                                  <td>{{ user.id }}</td>
+                                                  <td>{{ user.name }}</td>
+                                                  <td>{{ user.email }}</td>
+                                                  <td>{{ user.phone }}</td>
+                                                  <td>
+                                                       <a href="{{ url_for('doctor.see_case_reports', user_id=user.id) }}" class="btn btn-info btn-sm">
+                                                           <i class="ph-eye"></i> View Case Reports
+                                                       </a>
+                                                   </td>
+                                             </tr>
+                                             {% endfor %}
+                                        </tbody><!-- end tbody -->
+                                   </table><!-- end table -->
+                                   {% if not users %}
+                                   <div class="noresult">
+                                        <div class="text-center py-4">
+                                             <i class="ph-magnifying-glass fs-1 text-primary"></i>
+                                             <h5 class="mt-2">Sorry! No Result Found</h5>
+                                             <p class="text-muted mb-0">We've searched all appointments, but no matching
+                                                  records were found.</p>
+                                        </div>
+                                   </div>
+                                   {% endif %}
+                              </div>
+                         </div>
+                    </div>
+                    <!-- end card -->
+               </div>
+               <!-- end col -->
+          </div>
+          <!-- end row -->
+     </div>
+     <!-- container-fluid -->
+</div>
+<!-- End Page-content -->
+{% endblock %}

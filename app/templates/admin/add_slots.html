@@ -1,0 +1,127 @@
+{% extends 'admin/layout/base.html' %}
+{% block title %}Derma Detect | Add Slots{% endblock %}
+{% block content %}
+<div class="page-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card" id="orderList">
+          <div class="card-header">
+            <div class="row align-items-center gy-3">
+              <div class="col-lg-6 col-md-6">
+                <div class="contact-details-header">
+                  <h5>Assign Slots using Doctors Availabale Dates.</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <form method="POST" action="{{ url_for('admin.add-slot') }}">
+              {{ form.hidden_tag() }} <!-- CSRF token -->
+              <div class="row gy-4 mb-3">
+                <div class="col-md-6">
+                  {{ form.doctor_id.label(class="form-label") }}
+                  {{ form.doctor_id(class="form-control", id="doctorSelect") }}
+                </div>
+                <div class="col-md-6">
+                  {{ form.date_id.label(class="form-label") }}
+                  <select name="date_id" id="dateSelect" class="form-control">
+                    <option value="">Select a doctor first</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row gy-4 mb-3">
+                <div class="col-mg-6">
+                  <div class="form-group">
+                    {{ form.slot_9_00_9_30() }} {{ form.slot_9_00_9_30.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_9_30_10_00() }} {{ form.slot_9_30_10_00.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_10_00_10_30() }} {{ form.slot_10_00_10_30.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_10_30_11_00() }} {{ form.slot_10_30_11_00.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_11_00_11_30() }} {{ form.slot_11_00_11_30.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_11_30_12_00() }} {{ form.slot_11_30_12_00.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_12_00_12_30() }} {{ form.slot_12_00_12_30.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_12_30_1_00() }} {{ form.slot_12_30_1_00.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_1_00_1_30() }} {{ form.slot_1_00_1_30.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_1_30_2_00() }} {{ form.slot_1_30_2_00.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_2_00_2_30() }} {{ form.slot_2_00_2_30.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_2_30_3_00() }} {{ form.slot_2_30_3_00.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_3_00_3_30() }} {{ form.slot_3_00_3_30.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_3_30_4_00() }} {{ form.slot_3_30_4_00.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_4_00_4_30() }} {{ form.slot_4_00_4_30.label }}
+                  </div>
+                  <div class="form-group">
+                    {{ form.slot_4_30_5_00() }} {{ form.slot_4_30_5_00.label }}
+                  </div>
+                </div>
+              </div>
+              <div class="row gy-4 mb-3">
+                <div class="col-md-12 text-end">
+                  <a href="{{ url_for('admin.admin-doctors-dash') }}" class="btn btn-primary">Go Back</a>
+                  <button type="submit" class="btn btn-success">Add Slots</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- end card -->
+      </div>
+      <!-- end col -->
+    </div>
+    <!-- end row -->
+  </div>
+  <!-- container-fluid -->
+</div>
+<!-- End Page-content -->
+<script>
+  document.getElementById('doctorSelect').addEventListener('change', function () {
+    var doctorId = this.value;
+    var dateSelect = document.getElementById('dateSelect');
+
+    // Clear existing options
+    dateSelect.innerHTML = '<option value="">Select a date</option>';
+
+    if (doctorId) {
+      fetch(`/api/get-dates/${doctorId}`)
+        .then(response => response.json())
+        .then(data => {
+          data.dates.forEach(date => {
+            var option = document.createElement('option');
+            option.value = date.id;
+            option.textContent = date.date;
+            dateSelect.appendChild(option);
+          });
+        })
+        .catch(error => console.error('Error fetching dates:', error));
+    }
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en" data-layout="vertical" data-sidebar="dark" data-sidebar-size="lg" data-preloader="disable"
+    data-theme="default" data-topbar="light" data-bs-theme="light">
+
+
+<head>
+
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Derma Detect" name="description">
+    <meta content="Themesbrand" name="author">
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{{url_for('static',filename='admin-dash-assets/images/favicon.png')}}">
+
+    <!-- Fonts css load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link id="fontsLink"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+
+    <!-- Sweet Alert css-->
+    <link href="{{url_for('static',filename='admin-dash-assets/libs/sweetalert2/sweetalert2.min.css')}}" rel="stylesheet"
+        type="text/css">
+
+
+    <!-- jsvectormap css -->
+    <link href="{{url_for('static',filename='admin-dash-assets/libs/jsvectormap/css/jsvectormap.min.css')}}"
+        rel="stylesheet" type="text/css">
+
+    <!--Swiper slider css-->
+    <link href="{{url_for('static',filename='admin-dash-assets/libs/swiper/swiper-bundle.min.css')}}" rel="stylesheet"
+        type="text/css">
+
+    <!-- Layout config Js -->
+    <script src="{{url_for('static',filename='admin-dash-assets/js/layout.js')}}"></script>
+    <!-- Bootstrap Css -->
+    <link href="{{url_for('static',filename='admin-dash-assets/css/bootstrap.min.css')}}" rel="stylesheet"
+        type="text/css">
+    <!-- Icons Css -->
+    <link href="{{url_for('static',filename='admin-dash-assets/css/icons.min.css')}}" rel="stylesheet" type="text/css">
+    <!-- App Css-->
+    <link href="{{url_for('static',filename='admin-dash-assets/css/app.min.css')}}" rel="stylesheet" type="text/css">
+    <!-- custom Css-->
+    <link href="{{url_for('static',filename='admin-dash-assets/css/custom.min.css')}}" rel="stylesheet" type="text/css">
+
+
+    <!-- for json additon add-doctor data submition -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+
+</head>
+
+<body>
+
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+        <!-- sliderpart -->
+        {% include 'admin/layout/slider.html' %}
+        <!-- navbarpart slider -->
+
+
+        <!-- Left Sidebar End -->
+        <!-- Vertical Overlay-->
+        <div class="vertical-overlay"></div>
+        <!-- headerpart -->
+        {% include 'admin/layout/header.html' %}
+
+        <!-- header -->
+
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="main-content">
+            <!-- Hidden div for flash messages -->
+            <div id="flash-messages" style="display:none;">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div data-category="{{ category }}" data-message="{{ message }}"></div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- SweetAlert2 Script for Flash Messages -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const flashMessagesDiv = document.getElementById('flash-messages');
+                    const flashMessages = flashMessagesDiv.children;
+                    for (let i = 0; i < flashMessages.length; i++) {
+                        const category = flashMessages[i].getAttribute('data-category');
+                        const message = flashMessages[i].getAttribute('data-message');
+
+                        Swal.fire({
+                            icon: category,  // 'success', 'error', 'warning', etc.
+                            title: message,
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    }
+                });
+            </script>
+            <!-- page content -->
+            {% block content %}{% endblock %}
+
+            <!-- maincontent -->
+
+            <!-- footerpart -->
+            {% include 'admin/layout/footer.html' %}
+            <!-- footer -->
+        </div>
+        <!-- end main content-->
+
+    </div>
+    <!-- END layout-wrapper -->
+
+
+    <!--start back-to-top-->
+    <button class="btn btn-dark btn-icon" id="back-to-top">
+        <i class="bi bi-caret-up fs-3xl"></i>
+    </button>
+    <!--end back-to-top-->
+
+    <!--preloader-->
+    <div id="preloader">
+        <div id="status">
+            <div class="spinner-border text-primary avatar-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- JAVASCRIPT -->
+    <script src="{{url_for('static',filename='admin-dash-assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{url_for('static',filename='admin-dash-assets/libs/simplebar/simplebar.min.js')}}"></script>
+    <script src="{{url_for('static',filename='admin-dash-assets/js/plugins.js')}}"></script>
+
+    <!-- list.js min js -->
+    <script src="{{url_for('static',filename='admin-dash-assets/libs/list.js/list.min.js')}}"></script>
+    <script
+        src="{{url_for('static',filename='admin-dash-assets/libs/list.pagination.js/list.pagination.min.js')}}"></script>
+    <!-- sweetalert2 js -->
+    <script src="{{url_for('static',filename='admin-dash-assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
+
+    <!-- apexcharts -->
+    <script src="{{url_for('static',filename='admin-dash-assets/libs/apexcharts/apexcharts.min.js')}}"></script>
+
+    <!-- Vector map-->
+    <script src="{{url_for('static',filename='admin-dash-assets/libs/jsvectormap/js/jsvectormap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='admin-dash-assets/libs/jsvectormap/maps/world-merc.js')}}"></script>
+
+    <!-- Dashboard init -->
+    <script src="{{url_for('static',filename='admin-dash-assets/js/pages/dashboard-ecommerce.init.js')}}"></script>
+
+    <!-- App js -->
+    <script src="{{url_for('static',filename='admin-dash-assets/js/app.js')}}"></script>
+
+    <!-- ecommerce-orders -->
+    <script src="{{url_for('static',filename='admin-dash-assets/js/pages/ecommerce-orders.init.js')}}"></script>
+
+
+    <!-- for json additon add-doctor data submition -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+</body>
+
+</html>

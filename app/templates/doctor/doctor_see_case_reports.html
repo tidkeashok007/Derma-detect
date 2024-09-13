@@ -1,0 +1,180 @@
+{% extends 'doctor/layout/base.html' %}
+{% block title %}Derma Detect | See Case Report{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center gy-3">
+                            <div class="col-lg-6 col-md-6">
+                                <h4 class="text-center">{{ user.name }}'s Case History</h4>
+                            </div>
+                            <div class="col-md-auto ms-md-auto">
+                                <a href="{{ url_for('doctor.patient-details') }}" class="btn btn-primary">
+                                    <i class="bi bi-arrow-left align-baseline me-1"></i> Back
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="profile-header mb-4">
+                            <div class="row">
+                                <div class="col-md-3 text-center">
+                                    <img src="{{ url_for('static', filename='uploads/user_profile/' ~ user.profile_image) }}"
+                                        height="160" width="160" alt="Profile Image" class="profile-img rounded-circle">
+                                </div>
+                                <div class="col-md-9">
+                                    <h5 class="mb-1">Name: {{ user.name }}</h5>
+                                    <p class="mb-1">User ID: {{ user.id }}</p>
+                                    <p class="mb-1">Email: {{ user.email }}</p>
+                                    <p class="mb-1">Phone: {{ user.phone }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="appointments-list">
+                            {% for appointment in appointments %}
+                            <div class="appointment mb-4">
+                                <h5>{{ loop.index }}{% if loop.index == 1 %}st{% elif loop.index == 2 %}nd{% elif
+                                    loop.index == 3 %}rd{% else %}th{% endif %} Appointment</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <thead class="text-muted table-light">
+                                            <tr class="text-center">
+                                                <th scope="col">Appt ID</th>
+                                                <th scope="col">Pt Name</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Phone</th>
+                                                <th scope="col">Age</th>
+                                                <th scope="col">Gender</th>
+                                                <th scope="col">Address</th>
+                                                <th scope="col">Doctor</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Time</th>
+                                                <th scope="col">File</th>
+                                                <th scope="col">Message</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list form-check-all">
+                                            <tr class="text-center">
+                                                <td>{{ appointment.id }}</td>
+                                                <td>{{ appointment.user.name }}</td>
+                                                <td>{{ appointment.name }}</td>
+                                                <td>{{ appointment.email }}</td>
+                                                <td>{{ appointment.phone }}</td>
+                                                <td>{{ appointment.age }}</td>
+                                                <td>{{ appointment.gender }}</td>
+                                                <td>{{ appointment.address }}</td>
+                                                <td>{{ appointment.doctor.name }}</td>
+                                                <td>{{ appointment.date.date.strftime('%Y-%m-%d') }}</td>
+                                                <td>{{ appointment.time_slot.time_slot }}</td>
+                                                <td>
+                                                    {% if appointment.file %}
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#fileModal"
+                                                        onclick="showFile('{{ url_for('appointment.uploaded_file', filename=appointment.file) }}')">
+                                                        View File
+                                                    </button>
+                                                    {% else %}
+                                                    No file
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ appointment.message }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <h5>Case Report:</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped table-hover">
+                                            <thead class="text-muted table-light">
+                                                <tr class="text-center">
+                                                    <th scope="col">Appt ID</th>
+                                                    <th scope="col">Pt Name</th>
+                                                    <th scope="col">Report ID</th>
+                                                    <th scope="col">File</th>
+                                                    <th scope="col">Description</th>
+                                                    <th scope="col">Doctor</th>
+                                                    <th scope="col">Date Uploaded</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="list form-check-all">
+                                                {% if appointment.case_reports %}
+                                                {% for report in appointment.case_reports %}
+                                                <tr class="text-center">
+                                                    <td>{{ report.appointment_id }}</td>
+                                                    <td>{{ report.user.name }}</td>
+                                                    <td>{{ report.id }}</td>
+                                                    <td>
+                                                        {% if report.report_pdf %}
+                                                        <button type="button" class="btn btn-primary"
+                                                            data-bs-toggle="modal" data-bs-target="#fileModal"
+                                                            onclick="showFile('{{ url_for('doctor.uploaded_file', filename=report.report_pdf) }}')">
+                                                            View Report
+                                                        </button>
+                                                        {% else %}
+                                                        No file
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{ report.report_description }}</td>
+                                                    <td>{{ report.doctor.name }}</td>
+                                                    <td>{{ report.date_created.strftime('%Y-%m-%d') }}</td>
+                                                    
+                                                </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                <tr>
+                                                    <td colspan="7" class="text-center text-danger">No case reports
+                                                        available for
+                                                        this appointment.</td>
+                                                </tr>
+                                                {% endif %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- container-fluid -->
+</div>
+<!-- End Page-content -->
+
+<!-- View PDF File Modal -->
+<div class="modal fade" id="fileModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fileModalLabel">View File</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe id="fileViewer" src="" width="100%" height="500px"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showFile(fileUrl) {
+        document.getElementById('fileViewer').src = fileUrl;
+    }
+</script>
+
+
+{% endblock %}

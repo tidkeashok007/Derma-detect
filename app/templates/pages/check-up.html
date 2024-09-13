@@ -1,0 +1,136 @@
+{% extends 'layout/base.html' %}
+{% block title %}Derma Detect | Check My Skin{% endblock %}
+{% block content %}
+
+<section id="services" class="services mt-5">
+  <div class="container">
+    <div class="section-title text-center">
+      <h3>Upload Image for Skin Cancer Detection</h3>
+      <p>Upload an image to detect skin cancer. Our system will analyze the image and provide insights.</p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-4 col-md-6">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5>Skin Check Up Result</h5>
+            &nbsp;
+            {% if image_path %}
+            <img src="{{ image_path }}" alt="Uploaded Image" height="300" width="300">
+            <br><br>
+            <h6>Predicted Disease: <span>{{ model_prediction }}</span></h6>
+            <a href="{{ url_for('check_up.download_result') }}" class="btn btn-primary">Download Result</a>
+            {% else %}
+            &nbsp;
+            <form id="uploadForm" method="POST" enctype="multipart/form-data">
+              {{ form.hidden_tag() }}
+
+              <!-- File input for choosing files -->
+              <input type="file" name="image" accept="image/*" id="fileInput" style="display: none;">
+              <label for="fileInput" class="btn btn-primary">
+                <i class="fas fa-upload"></i> Choose File
+              </label>
+
+              <!-- Button to open camera -->
+              <!-- <button type="button" class="btn btn-secondary" id="openCamera">
+                <i class="fas fa-camera"></i> Use Camera
+              </button> -->
+              
+              <div id="cameraControls" style="display: none;">
+                <video id="cameraStream" width="100%"></video>
+                <button type="button" id="capturePhoto" class="btn btn-warning">
+                  <i class="fas fa-camera"></i> Capture Photo
+                </button>
+                <canvas id="cameraCanvas" style="display: none;"></canvas>
+                <img id="capturedImage" style="display: none; width: 100%;" />
+                <button type="button" id="reCapturePhoto" class="btn btn-info" style="display: none;">
+                  <i class="fas fa-redo"></i> Re-Capture
+                </button>
+              </div>
+
+              <br>
+              <button type="submit" class="btn btn-primary" id="checkUpButton" style="display: none;">
+                <i class="fas fa-check"></i> Check Up
+              </button>
+              <p id="imageName" style="margin-top: 10px;"></p> <!-- Display image name here -->
+            </form>
+            &nbsp;
+            <p class="card-text">Upload or capture an image of a skin lesion for analysis.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('fileInput').addEventListener('change', function(event) {
+    var file = event.target.files[0];
+    if (file) {
+      document.getElementById('imageName').textContent = `Selected File: ${file.name}`;
+      document.getElementById('checkUpButton').style.display = 'inline';
+    }
+  });
+
+  document.getElementById('openCamera').addEventListener('click', function() {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(function(stream) {
+        var video = document.getElementById('cameraStream');
+        video.srcObject = stream;
+        video.style.display = 'block';
+        video.play();
+        document.getElementById('cameraControls').style.display = 'block';
+      })
+      .catch(function(error) {
+        console.error('Error accessing the camera: ', error);
+      });
+  });
+
+  document.getElementById('capturePhoto').addEventListener('click', function() {
+    var video = document.getElementById('cameraStream');
+    var canvas = document.getElementById('cameraCanvas');
+    var context = canvas.getContext('2d');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    var dataUrl = canvas.toDataURL('image/jpeg');
+    var img = document.getElementById('capturedImage');
+    img.src = dataUrl;
+    img.style.display = 'block';
+
+    document.getElementById('imageName').textContent = 'Captured Image';
+
+    var hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'image';
+    hiddenInput.value = dataUrl;
+    document.getElementById('uploadForm').appendChild(hiddenInput);
+
+    document.getElementById('capturePhoto').style.display = 'none';
+    document.getElementById('reCapturePhoto').style.display = 'inline';
+    document.getElementById('checkUpButton').style.display = 'inline';
+
+    video.srcObject.getTracks().forEach(track => track.stop());
+    video.style.display = 'none';
+    canvas.style.display = 'none';
+  });
+
+  document.getElementById('reCapturePhoto').addEventListener('click', function() {
+    document.getElementById('capturePhoto').style.display = 'inline';
+    document.getElementById('reCapturePhoto').style.display = 'none';
+
+    var video = document.getElementById('cameraStream');
+    video.style.display = 'block';
+
+    document.getElementById('capturedImage').style.display = 'none';
+
+    var hiddenInput = document.querySelector('input[name="image"]');
+    if (hiddenInput) {
+      hiddenInput.remove();
+    }
+  });
+</script>
+
+{% endblock %}
